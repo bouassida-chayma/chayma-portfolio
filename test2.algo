@@ -1,0 +1,34 @@
+ALGORITHM SentenceAnalysis
+Var:
+    L, W, V : integer
+    C : character
+
+Begin
+    L :=0
+    W :=0
+    V := 0
+
+    Write("Enter a sentence ending with a '.' : ")
+    read (C):
+
+    While C ≠ '.'
+        L := L + 1
+
+        If C ∈ { 'a','e','i','o','u','A','E','I','O','U' } Then
+            V := V + 1
+        EndIf
+
+        If C = ' ' Then
+            W ← W + 1
+        EndIf
+
+        read (C)
+    EndWhile
+
+    L := L + 1 
+    W ← W + 1 
+
+    Write("Length of sentence = ", L)
+    Write("Number of words = ", W)
+    Write("Number of vowels = ", V)
+End
