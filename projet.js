@@ -1,67 +1,59 @@
-//  String Manipulation Functions
+// Recalculate and render total
+function updateTotal() {
+  let total = 0;
 
-// 1. Reverse a String
-function reverseString(str) {
-  return str.split("").reverse().join("");
+  // Loop each product exactly once
+  document.querySelectorAll(".list-products .card").forEach(card => {
+    const priceText = card.querySelector(".unit-price")?.textContent || "0";
+    const unitPrice = parseFloat(priceText); 
+    const qty = parseInt(card.querySelector(".quantity")?.textContent || "0", 10);
+    total += unitPrice * qty;
+  });
+
+  document.querySelector(".total").textContent = `${total.toFixed(2)} $`;
 }
 
-// 2. Count Characters
-function countCharacters(str) {
-  return str.length;
-}
+document.addEventListener("DOMContentLoaded", () => {
+  // PLUS
+  document.querySelectorAll(".fa-plus-circle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const qtyEl = btn.parentElement.querySelector(".quantity");
+      qtyEl.textContent = String((parseInt(qtyEl.textContent, 10) || 0) + 1);
+      updateTotal();
+    });
+  });
 
-// 3. Capitalize Words
-function capitalizeWords(sentence) {
-  return sentence
-    .split(" ")
-    .map(word => word.charAt(0).toUpperCase() + word.slice(1))
-    .join(" ");
-}
+  // MINUS 
+  document.querySelectorAll(".fa-minus-circle").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const qtyEl = btn.parentElement.querySelector(".quantity");
+      const current = parseInt(qtyEl.textContent, 10) || 0;
+      if (current > 0) {
+        qtyEl.textContent = String(current - 1);
+        updateTotal();
+      }
+    });
+  });
 
-//Array Functions
+  // DELETE 
+  document.querySelectorAll(".fa-trash-alt").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const outerProductBlock = btn.closest(".card")?.parentElement; 
+      if (outerProductBlock) {
+        outerProductBlock.remove();
+        updateTotal();
+      }
+    });
+  });
 
-// 4. Find Maximum
-function findMax(arr) {
-  return Math.max(...arr);
-}
+  // LIKE
+  document.querySelectorAll(".fa-heart").forEach(btn => {
+    btn.addEventListener("click", () => {
+      btn.classList.toggle("liked");
+      btn.style.color = btn.classList.contains("liked") ? "red" : "black";
+    });
+  });
 
-// 5. Find Minimum
-function findMin(arr) {
-  return Math.min(...arr);
-}
-
-// 6. Sum of Array
-function sumArray(arr) {
-  return arr.reduce((sum, num) => sum + num, 0);
-}
-
-// 7. Filter Array (pass your condition as a function)
-function filterArray(arr, condition) {
-  return arr.filter(condition);
-}
-
-// Mathematical Functions
-
-// 8. Factorial
-function factorial(n) {
-  if (n === 0 || n === 1) return 1;
-  return n * factorial(n - 1);
-}
-
-// 9. Prime Number Check
-function isPrime(num) {
-  if (num < 2) return false;
-  for (let i = 2; i <= Math.sqrt(num); i++) {
-    if (num % i === 0) return false;
-  }
-  return true;
-}
-
-// 10. Fibonacci Sequence
-function fibonacci(n) {
-  let sequence = [0, 1];
-  for (let i = 2; i < n; i++) {
-    sequence.push(sequence[i - 1] + sequence[i - 2]);
-  }
-  return sequence.slice(0, n);
-}
+  // Initial total
+  updateTotal();
+});
